@@ -6,6 +6,15 @@ const errorTemplateElement = document.querySelector('#error').content.querySelec
 
 let currentMessageElement = null;
 
+const closeMessage = () => {
+  if (currentMessageElement) {
+    currentMessageElement.remove();
+    currentMessageElement = null;
+    document.removeEventListener('keydown', onDocumentKeydown);
+    document.removeEventListener('click', onOverlayClick);
+  }
+};
+
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
@@ -16,15 +25,6 @@ const onDocumentKeydown = (evt) => {
 const onOverlayClick = (evt) => {
   if (evt.target === currentMessageElement) {
     closeMessage();
-  }
-};
-
-const closeMessage = () => {
-  if (currentMessageElement) {
-    currentMessageElement.remove();
-    currentMessageElement = null;
-    document.removeEventListener('keydown', onDocumentKeydown);
-    document.removeEventListener('click', onOverlayClick);
   }
 };
 
