@@ -30,7 +30,10 @@ const createThumbnail = (photo) => {
 };
 
 // Отрисовывает миниатюры фотографий в контейнере
-const renderThumbnails = (picturesList, picturesContainer) => {
+const renderThumbnails = (picturesList, picturesContainerElement) => {
+  // Очищаем контейнер перед отрисовкой
+  picturesContainerElement.querySelectorAll('.picture').forEach((pictureElement) => pictureElement.remove());
+
   const fragmentElement = document.createDocumentFragment();
 
   picturesList.forEach((pictureItem) => {
@@ -38,7 +41,7 @@ const renderThumbnails = (picturesList, picturesContainer) => {
     fragmentElement.appendChild(thumbnailElement);
   });
 
-  picturesContainer.appendChild(fragmentElement);
+  picturesContainerElement.appendChild(fragmentElement);
 };
 
 export { renderThumbnails };

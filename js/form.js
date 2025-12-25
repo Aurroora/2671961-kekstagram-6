@@ -1,5 +1,7 @@
 import { isEscapeKey } from './utils.js';
 import { initScaleAndEffects, resetScaleAndEffects } from './scale-effects.js';
+import { sendData } from './api.js';
+import { showSuccessMessage, showErrorMessage } from './messages.js';
 
 // Элементы формы
 const uploadFormElement = document.querySelector('.img-upload__form');
@@ -8,6 +10,7 @@ const uploadOverlayElement = uploadFormElement.querySelector('.img-upload__overl
 const uploadCancelElement = uploadFormElement.querySelector('#upload-cancel');
 const hashtagsInputElement = uploadFormElement.querySelector('.text__hashtags');
 const commentInputElement = uploadFormElement.querySelector('.text__description');
+const submitButtonElement = uploadFormElement.querySelector('.img-upload__submit');
 
 const pristine = new Pristine(uploadFormElement, {
   classTo: 'img-upload__field-wrapper',
@@ -106,6 +109,7 @@ const closeUploadForm = () => {
   uploadFormElement.reset();
   pristine.reset();
   resetScaleAndEffects();
+  unblockSubmitButton();
 };
 
 function onDocumentKeydown(evt) {
@@ -118,15 +122,42 @@ function onDocumentKeydown(evt) {
   }
 }
 
+// Блокировка/разблокировка кнопки отправки
+const blockSubmitButton = () => {
+  submitButtonElement.disabled = true;
+  submitButtonElement.textContent = 'Публикую...';
+};
+
+const unblockSubmitButton = () => {
+  submitButtonElement.disabled = false;
+  submitButtonElement.textContent = 'Опубликовать';
+};
+
 // Обработчик выбора файла
 const onFileInputChange = () => {
   openUploadForm();
 };
 
 // Обработчик отправки формы
-const onFormSubmit = (evt) => {
+const onFormSubmit = async (evt) => {
+  evt.preventDefault();
+
   if (!pristine.validate()) {
-    evt.preventDefault();
+    return;
+  }
+
+  blockSubmitButton();
+
+  const formData = new FormData(uploadFormElement);
+
+  try {
+    await sendData(formData);
+    closeUploadForm();
+    showSuccessMessage();
+  } catch {
+    showErrorMessage();
+  } finally {
+    unblockSubmitButton();
   }
 };
 
