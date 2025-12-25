@@ -69,12 +69,6 @@ let currentEffect = 'none';
 const updateScaleValue = (value) => {
   scaleValueElement.value = `${value}%`;
   imagePreviewElement.style.transform = `scale(${value / 100})`;
-
-  // Записывает значение в скрытое поле формы
-  const hiddenInput = document.querySelector('input[name="scale"]');
-  if (hiddenInput) {
-    hiddenInput.value = `${value}%`;
-  }
 };
 
 const onScaleSmallerClick = () => {
@@ -92,7 +86,7 @@ const onScaleBiggerClick = () => {
 // Инициализация слайдера
 const initEffectSlider = () => {
   if (typeof noUiSlider === 'undefined' || !effectLevelSliderElement) {
-    return; // Просто выходит, если библиотека не подключена или элемент нет
+    return;
   }
 
   if (effectLevelSliderElement.noUiSlider) {

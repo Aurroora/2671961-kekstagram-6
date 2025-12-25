@@ -19,36 +19,36 @@ const COMMENTS_PER_PORTION = 5;
 const renderCommentsPortion = () => {
   const commentsToShow = currentComments.slice(commentsShown, commentsShown + COMMENTS_PER_PORTION);
 
-  const commentsFragment = document.createDocumentFragment();
+  const commentsFragmentElement = document.createDocumentFragment();
 
   commentsToShow.forEach((comment) => {
     const commentElement = document.createElement('li');
     commentElement.classList.add('social__comment');
 
     // Создает изображение аватарки
-    const avatarImage = document.createElement('img');
-    avatarImage.classList.add('social__picture');
-    avatarImage.src = comment.avatar;
-    avatarImage.alt = comment.name;
-    avatarImage.width = 35;
-    avatarImage.height = 35;
+    const avatarImageElement = document.createElement('img');
+    avatarImageElement.classList.add('social__picture');
+    avatarImageElement.src = comment.avatar;
+    avatarImageElement.alt = comment.name;
+    avatarImageElement.width = 35;
+    avatarImageElement.height = 35;
 
     // Создает текст комментария
-    const commentText = document.createElement('p');
-    commentText.classList.add('social__text');
-    commentText.textContent = comment.message;
+    const commentTextElement = document.createElement('p');
+    commentTextElement.classList.add('social__text');
+    commentTextElement.textContent = comment.message;
 
     // Добавляет элементы в комментарий
-    commentElement.append(avatarImage, commentText);
-    commentsFragment.appendChild(commentElement);
+    commentElement.append(avatarImageElement, commentTextElement);
+    commentsFragmentElement.appendChild(commentElement);
   });
 
-  socialCommentsElement.appendChild(commentsFragment);
+  socialCommentsElement.appendChild(commentsFragmentElement);
 
   // Счетчик показанных комментариев
   commentsShown += commentsToShow.length;
-  const commentsCountSpan = commentCountElement.querySelector('.comments-count');
-  commentsCountSpan.textContent = currentComments.length;
+  const commentsCountSpanElement = commentCountElement.querySelector('.comments-count');
+  commentsCountSpanElement.textContent = currentComments.length;
   commentCountElement.firstChild.textContent = `${commentsShown} из `;
 
   if (commentsShown >= currentComments.length) {
