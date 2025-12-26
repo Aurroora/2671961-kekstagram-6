@@ -1,5 +1,6 @@
 import { getData } from './api.js';
 import { renderThumbnails } from './thumbnails.js';
+import { initFilters } from './filters.js';
 import './form.js';
 
 const picturesContainerElement = document.querySelector('.pictures');
@@ -25,13 +26,13 @@ const showErrorMessage = (message) => {
 const loadAndRenderPhotos = async () => {
   try {
     const photosArray = await getData();
+    initFilters(photosArray);
     renderThumbnails(photosArray, picturesContainerElement);
   } catch (error) {
     showErrorMessage(error.message);
   }
 };
 
-// Запуск после загрузки DOM
 document.addEventListener('DOMContentLoaded', () => {
   loadAndRenderPhotos();
 });
