@@ -5,7 +5,6 @@ const getRandomInteger = (minValue, maxValue) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
-// Возвращает случайный элемент из массива
 const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
 
 // Проверяет, является ли клавиша Esc
@@ -31,4 +30,28 @@ const showAlert = (message) => {
   }, 5000);
 };
 
-export { getRandomInteger, getRandomArrayElement, isEscapeKey, showAlert };
+// Функция для устранения дребезга
+const debounce = (callback, timeoutDelay = 500) => {
+  let timeoutId;
+
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
+
+// Функция для пропуска кадров
+const throttle = (callback, delayBetweenFrames) => {
+  let lastTime = 0;
+
+  return (...rest) => {
+    const now = new Date();
+
+    if (now - lastTime >= delayBetweenFrames) {
+      callback.apply(this, rest);
+      lastTime = now;
+    }
+  };
+};
+
+export { getRandomInteger, getRandomArrayElement, isEscapeKey, showAlert, debounce, throttle };
