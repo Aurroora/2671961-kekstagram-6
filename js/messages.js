@@ -1,4 +1,4 @@
-import { isEscapeKey } from './utils.js';
+import { isEscapeKey } from './util.js';
 import { closeUploadForm } from './form.js';
 
 const successTemplateElement = document.querySelector('#success').content.querySelector('.success');
