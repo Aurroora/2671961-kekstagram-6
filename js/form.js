@@ -12,6 +12,10 @@ const hashtagsInputElement = uploadFormElement.querySelector('.text__hashtags');
 const commentInputElement = uploadFormElement.querySelector('.text__description');
 const submitButtonElement = uploadFormElement.querySelector('.img-upload__submit');
 
+// Элементы для предпросмотра изображения
+const imagePreviewElement = uploadFormElement.querySelector('.img-upload__preview img');
+const effectsPreviewElements = uploadFormElement.querySelectorAll('.effects__preview');
+
 const pristine = new Pristine(uploadFormElement, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
@@ -102,6 +106,32 @@ pristine.addValidator(
   'Комментарий не может быть длиннее 140 символов'
 );
 
+// Функция для отображения загруженного изображения
+const showUploadedImage = (file) => {
+  const imageUrl = URL.createObjectURL(file);
+
+  imagePreviewElement.src = imageUrl;
+  imagePreviewElement.alt = 'Загруженное пользователем изображение';
+
+  effectsPreviewElements.forEach((preview) => {
+    preview.style.backgroundImage = `url('${imageUrl}')`;
+  });
+};
+
+// Функция для очистки URL объекта
+const clearImageUrl = () => {
+  if (imagePreviewElement.src && imagePreviewElement.src.startsWith('blob:')) {
+    URL.revokeObjectURL(imagePreviewElement.src);
+  }
+
+  imagePreviewElement.src = 'img/upload-default-image.jpg';
+  imagePreviewElement.alt = 'Предварительный просмотр фотографии';
+
+  effectsPreviewElements.forEach((preview) => {
+    preview.style.backgroundImage = 'url("img/upload-default-image.jpg")';
+  });
+};
+
 // Открытие формы
 const openUploadForm = () => {
   uploadOverlayElement.classList.remove('hidden');
@@ -121,6 +151,8 @@ const closeUploadForm = () => {
   pristine.reset();
   resetScaleAndEffects();
   unblockSubmitButton();
+
+  clearImageUrl();
 };
 
 function onDocumentKeydown(evt) {
@@ -134,8 +166,17 @@ function onDocumentKeydown(evt) {
 }
 
 // Обработчик выбора файла
-const onFileInputChange = () => {
-  openUploadForm();
+const onFileInputChange = (evt) => {
+  const file = evt.target.files[0];
+
+  if (file && file.type.startsWith('image/')) {
+    showUploadedImage(file);
+    openUploadForm();
+  } else {
+    // Сообщение об ошибке
+    showErrorMessage('Пожалуйста, выберите файл изображения (JPEG, PNG, GIF и т.д.)');
+    uploadInputElement.value = '';
+  }
 };
 
 // Обработчик отправки формы
@@ -172,6 +213,10 @@ uploadFormElement.addEventListener('submit', onFormSubmit);
       evt.stopPropagation();
     }
   });
+});
+
+window.addEventListener('beforeunload', () => {
+  clearImageUrl();
 });
 
 export { closeUploadForm };

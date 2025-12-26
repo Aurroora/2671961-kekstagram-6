@@ -28,8 +28,16 @@ function onOverlayClick(evt) {
   }
 }
 
-const showMessage = (templateElement, buttonClass) => {
+const showMessage = (templateElement, buttonClass, customTitle = null) => {
   currentMessageElement = templateElement.cloneNode(true);
+
+  if (customTitle) {
+    const titleElement = currentMessageElement.querySelector('h2');
+    if (titleElement) {
+      titleElement.textContent = customTitle;
+    }
+  }
+
   const buttonElement = currentMessageElement.querySelector(buttonClass);
 
   buttonElement.addEventListener('click', closeMessage);
@@ -44,8 +52,8 @@ const showSuccessMessage = () => {
   closeUploadForm();
 };
 
-const showErrorMessage = () => {
-  showMessage(errorTemplateElement, '.error__button');
+const showErrorMessage = (customMessage = null) => {
+  showMessage(errorTemplateElement, '.error__button', customMessage);
 };
 
 export { showSuccessMessage, showErrorMessage };
