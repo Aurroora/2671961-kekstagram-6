@@ -1,4 +1,4 @@
-import { debounce } from './utils.js';
+import { debounce } from './util.js';
 import { renderThumbnails } from './thumbnails.js';
 
 const RANDOM_PHOTOS_COUNT = 10;

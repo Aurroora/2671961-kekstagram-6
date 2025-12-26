@@ -1,4 +1,4 @@
-import { isEscapeKey } from './utils.js';
+import { isEscapeKey } from './util.js';
 import { initScaleAndEffects, resetScaleAndEffects } from './scale-effects.js';
 import { sendData } from './api.js';
 import { showSuccessMessage, showErrorMessage } from './messages.js';
@@ -11,6 +11,10 @@ const uploadCancelElement = uploadFormElement.querySelector('#upload-cancel');
 const hashtagsInputElement = uploadFormElement.querySelector('.text__hashtags');
 const commentInputElement = uploadFormElement.querySelector('.text__description');
 const submitButtonElement = uploadFormElement.querySelector('.img-upload__submit');
+
+// Элементы для предпросмотра изображения
+const imagePreviewElement = uploadFormElement.querySelector('.img-upload__preview img');
+const effectsPreviewElements = uploadFormElement.querySelectorAll('.effects__preview');
 
 const pristine = new Pristine(uploadFormElement, {
   classTo: 'img-upload__field-wrapper',
@@ -102,26 +106,31 @@ pristine.addValidator(
   'Комментарий не может быть длиннее 140 символов'
 );
 
-// Открытие формы
-const openUploadForm = () => {
-  uploadOverlayElement.classList.remove('hidden');
-  document.body.classList.add('modal-open');
-  document.addEventListener('keydown', onDocumentKeydown);
-  initScaleAndEffects();
-};
+function clearImageUrl() {
+  if (imagePreviewElement.src && imagePreviewElement.src.startsWith('blob:')) {
+    URL.revokeObjectURL(imagePreviewElement.src);
+  }
 
-// Закрытие формы
-const closeUploadForm = () => {
+  imagePreviewElement.src = 'img/upload-default-image.jpg';
+  imagePreviewElement.alt = 'Предварительный просмотр фотографии';
+
+  effectsPreviewElements.forEach((preview) => {
+    preview.style.backgroundImage = 'url("img/upload-default-image.jpg")';
+  });
+}
+
+function closeUploadForm() {
   uploadOverlayElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
 
-  // Сброс формы и значений
   uploadFormElement.reset();
   pristine.reset();
   resetScaleAndEffects();
   unblockSubmitButton();
-};
+
+  clearImageUrl();
+}
 
 function onDocumentKeydown(evt) {
   if (isEscapeKey(evt)) {
@@ -133,12 +142,36 @@ function onDocumentKeydown(evt) {
   }
 }
 
-// Обработчик выбора файла
-const onFileInputChange = () => {
-  openUploadForm();
+const showUploadedImage = (file) => {
+  const imageUrl = URL.createObjectURL(file);
+
+  imagePreviewElement.src = imageUrl;
+  imagePreviewElement.alt = 'Загруженное пользователем изображение';
+
+  effectsPreviewElements.forEach((preview) => {
+    preview.style.backgroundImage = `url('${imageUrl}')`;
+  });
 };
 
-// Обработчик отправки формы
+const openUploadForm = () => {
+  uploadOverlayElement.classList.remove('hidden');
+  document.body.classList.add('modal-open');
+  document.addEventListener('keydown', onDocumentKeydown);
+  initScaleAndEffects();
+};
+
+const onFileInputChange = (evt) => {
+  const file = evt.target.files[0];
+
+  if (file && file.type.startsWith('image/')) {
+    showUploadedImage(file);
+    openUploadForm();
+  } else {
+    showErrorMessage('Пожалуйста, выберите файл изображения (JPEG, PNG, GIF и т.д.)');
+    uploadInputElement.value = '';
+  }
+};
+
 const onFormSubmit = async (evt) => {
   evt.preventDefault();
 
@@ -172,6 +205,10 @@ uploadFormElement.addEventListener('submit', onFormSubmit);
       evt.stopPropagation();
     }
   });
+});
+
+window.addEventListener('beforeunload', () => {
+  clearImageUrl();
 });
 
 export { closeUploadForm };
