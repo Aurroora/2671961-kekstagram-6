@@ -1,4 +1,4 @@
-import { isEscapeKey } from './util.js';
+import { isEscapeKey } from './utils.js';
 import { closeUploadForm } from './form.js';
 
 const successTemplateElement = document.querySelector('#success').content.querySelector('.success');
@@ -28,16 +28,8 @@ function onOverlayClick(evt) {
   }
 }
 
-const showMessage = (templateElement, buttonClass, customTitle = null) => {
+const showMessage = (templateElement, buttonClass) => {
   currentMessageElement = templateElement.cloneNode(true);
-
-  if (customTitle) {
-    const titleElement = currentMessageElement.querySelector('h2');
-    if (titleElement) {
-      titleElement.textContent = customTitle;
-    }
-  }
-
   const buttonElement = currentMessageElement.querySelector(buttonClass);
 
   buttonElement.addEventListener('click', closeMessage);
@@ -52,8 +44,8 @@ const showSuccessMessage = () => {
   closeUploadForm();
 };
 
-const showErrorMessage = (customMessage = null) => {
-  showMessage(errorTemplateElement, '.error__button', customMessage);
+const showErrorMessage = () => {
+  showMessage(errorTemplateElement, '.error__button');
 };
 
 export { showSuccessMessage, showErrorMessage };
