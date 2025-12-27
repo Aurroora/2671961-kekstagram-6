@@ -9,6 +9,7 @@ const picturesContainerElement = document.querySelector('.pictures');
 const showErrorMessage = (message) => {
   const errorTemplateElement = document.querySelector('#error').content.querySelector('.error');
   const errorElement = errorTemplateElement.cloneNode(true);
+  errorElement.classList.add('data-error');
   const errorTitleElement = errorElement.querySelector('.error__title');
   const errorButtonElement = errorElement.querySelector('.error__button');
 

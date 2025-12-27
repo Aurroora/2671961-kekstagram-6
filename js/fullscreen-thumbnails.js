@@ -1,9 +1,9 @@
-import { isEscapeKey } from './util.js';
+import { isEscapeKey } from './utils.js';
 
 const bigPictureElement = document.querySelector('.big-picture');
 const bigPictureImageElement = bigPictureElement.querySelector('.big-picture__img img');
 const likesCountElement = bigPictureElement.querySelector('.likes-count');
-const commentsCountElement = bigPictureElement.querySelector('.comments-count');
+const commentsCountElement = bigPictureElement.querySelector('.social__comment-total-count');
 const socialCommentsElement = bigPictureElement.querySelector('.social__comments');
 const socialCaptionElement = bigPictureElement.querySelector('.social__caption');
 const commentCountElement = bigPictureElement.querySelector('.social__comment-count');
@@ -47,9 +47,10 @@ const renderCommentsPortion = () => {
 
   // Счетчик показанных комментариев
   commentsShown += commentsToShow.length;
-  const commentsCountSpanElement = commentCountElement.querySelector('.comments-count');
+  const commentsCountSpanElement = commentCountElement.querySelector('.social__comment-total-count');
+  const commentsShownSpanElement = commentCountElement.querySelector('.social__comment-shown-count');
   commentsCountSpanElement.textContent = currentComments.length;
-  commentCountElement.firstChild.textContent = `${commentsShown} из `;
+  commentsShownSpanElement.textContent = commentsShown;
 
   if (commentsShown >= currentComments.length) {
     commentsLoaderElement.classList.add('hidden');
