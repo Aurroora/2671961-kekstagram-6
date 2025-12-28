@@ -35,35 +35,6 @@ const unblockSubmitButton = () => {
   submitButtonElement.textContent = 'Опубликовать';
 };
 
-// Функция для проверки хэш-тегов
-const validateHashtags = (value) => {
-  if (value.trim() === '') {
-    return true;
-  }
-
-  const hashtags = value.trim().split(/\s+/).filter(Boolean);
-
-  if (hashtags.length > 5) {
-    return false;
-  }
-
-  for (let i = 0; i < hashtags.length; i++) {
-    const hashtag = hashtags[i];
-
-    if (!HASHTAG_REGEX.test(hashtag)) {
-      return false;
-    }
-
-    for (let j = i + 1; j < hashtags.length; j++) {
-      if (hashtag.toLowerCase() === hashtags[j].toLowerCase()) {
-        return false;
-      }
-    }
-  }
-
-  return true;
-};
-
 // Функция для получения сообщения об ошибке
 const getHashtagErrorMessage = (value) => {
   if (value.trim() === '') {
@@ -90,6 +61,9 @@ const getHashtagErrorMessage = (value) => {
 
   return '';
 };
+
+// Функция для проверки хэш-тегов
+const validateHashtags = (value) => getHashtagErrorMessage(value) === '';
 
 // Функция для проверки комментария
 const validateComment = (value) => value.length <= 140;
