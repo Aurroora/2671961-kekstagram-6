@@ -41,9 +41,6 @@ const applyFilter = (filter) => {
       break;
   }
 
-  const currentThumbnails = picturesContainerElement.querySelectorAll('.picture');
-  currentThumbnails.forEach((thumbnail) => thumbnail.remove());
-
   renderThumbnails(filteredPhotos, picturesContainerElement);
 };
 
