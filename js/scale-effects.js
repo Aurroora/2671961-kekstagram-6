@@ -68,6 +68,7 @@ let currentEffect = 'none';
 // Функции для масштабирования
 const updateScaleValue = (value) => {
   scaleValueElement.value = `${value}%`;
+  scaleValueElement.setAttribute('value', `${value}%`);
   imagePreviewElement.style.transform = `scale(${value / 100})`;
 };
 
